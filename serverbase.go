@@ -6,7 +6,6 @@ import (
 	"github.com/labstack/echo"
 	"net/http"
 	"bytes"
-	"os"
 )
 
 type Message struct {
@@ -41,6 +40,7 @@ var FuncMap  = map[string]func([]float64)float64{"sum":Sum,"prod":Prod}
 
 func StartP(c echo.Context) error{
 	m := Message{}
+	fmt.Printf("Recived msg: %#v\n",m)
 
 	err := c.Bind(&m)
 	if err != nil {
@@ -48,7 +48,9 @@ func StartP(c echo.Context) error{
 		return err
 	}
 	res := FuncMap[m.Dest](m.Data)
+
 	d := Done{Result:res}
+	fmt.Printf("Finished computation sending result: %#v\n",d)
 
 	Sendres(d)
 
@@ -69,26 +71,16 @@ func Sendres(d Done) error{
 }
 
 func Sendjob(m Message) error{
-	// data, err := json.Marshal(m)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return err
-	// }
-	//
-	// fmt.Println("JSON to send;")
-	// fmt.Println(string(data))
 
 	data, err := json.Marshal(m)
 
-	fmt.Println("JSON to send;")
-	fmt.Println(string(data))
-	fmt.Sprintf("%s:8000/start",n[m.Dest])
-	resp, err := http.Post(fmt.Sprintf("http://%s:8000/start",n[m.Dest]),"application/json",bytes.NewBuffer(data))
+
+	_, err = http.Post(fmt.Sprintf("http://%s:8000/start",n[m.Dest]),"application/json",bytes.NewBuffer(data))
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
-	fmt.Println(resp)
+	fmt.Printf("Message sent\n")
 	return nil
 }
 
@@ -101,7 +93,7 @@ func DoneP(c echo.Context) error {
 		return err
 	}
 
-	fmt.Printf("Result: %f\n",d.Result)
+	fmt.Printf("Got Result: %f\n",d.Result)
 
 	return nil
 
@@ -109,6 +101,8 @@ func DoneP(c echo.Context) error {
 
 func GetP(c echo.Context) error{
 	m := Message{}
+
+	fmt.Printf("Recieved msg: %#v\n",m)
 
 	err := c.Bind(&m)
 	if err != nil {
@@ -118,14 +112,11 @@ func GetP(c echo.Context) error{
 
 	Sendjob(m)
 
-
-	fmt.Printf("%#v\n",m)
-
 	return nil
 }
 func Listen(master bool){
 		e := echo.New()
-		fmt.Printf("%#v\n",os.Getenv("PATH"))
+
 		fmt.Printf("Starting to listen on %d\n",8000)
 		if master {
 			fmt.Println("Master process")
