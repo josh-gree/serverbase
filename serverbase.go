@@ -21,6 +21,14 @@ type Go struct {
 
 var n = map[string]string{"sum":"n2","prod":"n1"}
 
+func Sum(data []float64) float64{
+	sum := 0.0
+	for _,d := range data {
+		sum += d
+	}
+	return sum
+}
+
 func StartP(c echo.Context) error{
 	g := Go{}
 
@@ -70,6 +78,7 @@ func GetP(c echo.Context) error{
 		fmt.Println(err)
 		return err
 	}
+	fmt.Println(Sum(m.Data))
 
 	Send(m)
 
