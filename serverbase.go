@@ -10,13 +10,15 @@ import (
 )
 
 type Message struct {
-	Dest int `json:"dest"`
+	Dest string `json:"dest"`
 	Time float64 `json:"time"`
 }
 
 type Go struct {
 	Time float64 `json:"time"`
 }
+
+var n = map[string]string{"sum":"n2","prod":"n1"}
 
 func StartP(c echo.Context) error{
 	g := Go{}
@@ -49,8 +51,8 @@ func Send(m Message) error{
 
 	fmt.Println("JSON to send;")
 	fmt.Println(string(data))
-
-	resp, err := http.Post(fmt.Sprintf("http://localhost:%d/start",m.Dest),"application/json",bytes.NewBuffer(data))
+	fmt.Printf("%s:8000/start\n",n[m.Dest])
+	resp, err := http.Post(fmt.Sprintf("%s:8000/start",n[m.Dest]),"application/json",bytes.NewBuffer(data))
 	if err != nil {
 		fmt.Println(err)
 		return err
@@ -77,7 +79,7 @@ func GetP(c echo.Context) error{
 }
 func Listen(master bool){
 		e := echo.New()
-		fmt.Println(os.Getenv("TEST"))
+		fmt.Printf("%#v\n",os.Getenv("PATH"))
 		fmt.Printf("Starting to listen on %d\n",8000)
 		if master {
 			fmt.Println("Master process")
