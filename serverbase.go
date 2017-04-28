@@ -15,8 +15,8 @@ type Message struct {
 	Time float64 `json:"time"`
 }
 
-type Go struct {
-	Time float64 `json:"time"`
+type Done struct {
+	Result float64 `json:"result"`
 }
 
 var n = map[string]string{"sum":"n2","prod":"n1"}
@@ -53,7 +53,20 @@ func StartP(c echo.Context) error{
 	return nil
 }
 
-func Send(m Message) error{
+func Sendres(d Done) error{
+	data, err := json.Marshal(d)
+
+	_, err = http.Post("http://public:8000/done","application/json",bytes.NewBuffer(data))
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
+
+}
+
+func Sendjob(m Message) error{
 	// data, err := json.Marshal(m)
 	// if err != nil {
 	// 	fmt.Println(err)
@@ -77,6 +90,21 @@ func Send(m Message) error{
 	return nil
 }
 
+func DoneP(c echo.Context) error {
+	d := Done{}
+
+	err := c.Bind(&d)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	fmt.Printf("Result: %f\n",d.Result)
+
+	return nil
+
+}
+
 func GetP(c echo.Context) error{
 	m := Message{}
 
@@ -86,7 +114,7 @@ func GetP(c echo.Context) error{
 		return err
 	}
 
-	Send(m)
+	Sendjob(m)
 
 
 	fmt.Printf("%#v\n",m)
@@ -104,5 +132,6 @@ func Listen(master bool){
 		}
 		e.POST("/start", StartP)
 		e.POST("/msg", GetP)
+		e.POST("/done", DoneP)
 		e.Start(":8000")
 }
