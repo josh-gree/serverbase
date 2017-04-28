@@ -11,6 +11,7 @@ import (
 
 type Message struct {
 	Dest string `json:"dest"`
+	Data []float64 `json:"data"`
 	Time float64 `json:"time"`
 }
 
