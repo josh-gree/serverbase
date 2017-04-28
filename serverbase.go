@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo"
 	"net/http"
 	"bytes"
+	"os"
 )
 
 type Message struct {
@@ -76,6 +77,7 @@ func GetP(c echo.Context) error{
 }
 func Listen(master bool){
 		e := echo.New()
+		fmt.Println(os.Getenv("TEST"))
 		fmt.Printf("Starting to listen on %d\n",8000)
 		if master {
 			fmt.Println("Master process")
