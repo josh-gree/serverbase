@@ -38,7 +38,7 @@ func StartP(c echo.Context) error{
 		return err
 	}
 	fmt.Println(Sum(m.Data))
-	fmt.Printf("%#v\n",g)
+	fmt.Printf("%#v\n",m)
 
 	return nil
 }
