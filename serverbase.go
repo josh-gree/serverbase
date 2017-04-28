@@ -40,13 +40,12 @@ var FuncMap  = map[string]func([]float64)float64{"sum":Sum,"prod":Prod}
 
 func StartP(c echo.Context) error{
 	m := Message{}
-	fmt.Printf("Recived msg: %#v\n",m)
-
 	err := c.Bind(&m)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
+	fmt.Printf("Recived msg: %#v\n",m)
 	res := FuncMap[m.Dest](m.Data)
 
 	d := Done{Result:res}
@@ -102,15 +101,15 @@ func DoneP(c echo.Context) error {
 func GetP(c echo.Context) error{
 	m := Message{}
 
-	fmt.Printf("Recieved msg: %#v\n",m)
-
 	err := c.Bind(&m)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
+	fmt.Printf("Recieved msg: %#v\n",m)
 
 	Sendjob(m)
+	fmt.Printf("Sent msg\n",m)
 
 	return nil
 }
