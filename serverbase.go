@@ -30,14 +30,14 @@ func Sum(data []float64) float64{
 }
 
 func StartP(c echo.Context) error{
-	g := Go{}
+	m := Message{}
 
-	err := c.Bind(&g)
+	err := c.Bind(&m)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
-
+	fmt.Println(Sum(m.Data))
 	fmt.Printf("%#v\n",g)
 
 	return nil
@@ -53,10 +53,7 @@ func Send(m Message) error{
 	// fmt.Println("JSON to send;")
 	// fmt.Println(string(data))
 
-	g := Go{
-		Time : m.Time,
-	}
-	data, err := json.Marshal(g)
+	data, err := json.Marshal(m)
 
 	fmt.Println("JSON to send;")
 	fmt.Println(string(data))
@@ -78,7 +75,6 @@ func GetP(c echo.Context) error{
 		fmt.Println(err)
 		return err
 	}
-	fmt.Println(Sum(m.Data))
 
 	Send(m)
 
