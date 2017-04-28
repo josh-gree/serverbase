@@ -51,8 +51,8 @@ func Send(m Message) error{
 
 	fmt.Println("JSON to send;")
 	fmt.Println(string(data))
-	fmt.Printf("%s:8000/start\n",n[m.Dest])
-	resp, err := http.Post(fmt.Sprintf("%s:8000/start",n[m.Dest]),"application/json",bytes.NewBuffer(data))
+	fmt.Sprintf("%s:8000/start",n[m.Dest]
+	resp, err := http.Post(fmt.Sprintf("http://%s:8000/start",n[m.Dest]),"application/json",bytes.NewBuffer(data))
 	if err != nil {
 		fmt.Println(err)
 		return err
