@@ -47,8 +47,10 @@ func StartP(c echo.Context) error{
 		fmt.Println(err)
 		return err
 	}
-	fmt.Println(FuncMap[m.Dest](m.Data))
-	fmt.Printf("%#v\n",m)
+	res := FuncMap[m.Dest](m.Data)
+	d := Done{Result:res}
+
+	Sendres(d)
 
 	return nil
 }
