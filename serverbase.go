@@ -29,6 +29,16 @@ func Sum(data []float64) float64{
 	return sum
 }
 
+func Prod(data []float64) float64{
+	prod := 1.0
+	for _,d := range data {
+		prod *= d
+	}
+	return prod
+}
+
+var FuncMap  = map[string]func([]float64)float64{"sum":Sum,"prod":Prod}
+
 func StartP(c echo.Context) error{
 	m := Message{}
 
@@ -37,7 +47,7 @@ func StartP(c echo.Context) error{
 		fmt.Println(err)
 		return err
 	}
-	fmt.Println(Sum(m.Data))
+	fmt.Println(FuncMap[m.Dest](m.Data))
 	fmt.Printf("%#v\n",m)
 
 	return nil
